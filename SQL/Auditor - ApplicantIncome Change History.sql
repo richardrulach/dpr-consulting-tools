@@ -41,20 +41,15 @@ WHERE
 
 
 SELECT 
-	UP.UpdateDate,
-	UP.SourceXml.value('(/U_/F_[@n_ eq "ApplicantId"]/N_)[1]','uniqueidentifier')	AS ApplicantId,
-	UP.SourceXml.value('(/U_/F_[@n_ eq "BasicSalary"]/N_)[1]','float')				AS BasicSalary,
-	UP.SourceXml.value('(/U_/F_[@n_ eq "Overtime"]/N_)[1]','float')					AS Overtime,
-	UP.SourceXml.value('(/U_/F_[@n_ eq "BonusCommission"]/N_)[1]','float')			AS BonusCommission,
-	UP.SourceXml.value('(/U_/F_[@n_ eq "ShiftAllowance"]/N_)[1]','float')			AS ShiftAllowance,
-	UP.SourceXml.value('(/U_/F_[@n_ eq "OtherIncome"]/N_)[1]','float')				AS OtherIncome,
-	UP.SourceXml
-FROM (
-	SELECT 
-		U.UpdateDate,
-		UP.UpdatedValues.query('.') AS SourceXml
-	FROM #Updates U
-	CROSS APPLY U.UpdatesXml.nodes('/U_') AS UP(UpdatedValues)
-) UP
+	U.UpdateDate,
+	UpdatedValues.query('.').value('(/U_/F_[@n_ eq "ApplicantId"]/N_)[1]','uniqueidentifier')	AS ApplicantId,
+	UpdatedValues.query('.').value('(/U_/F_[@n_ eq "BasicSalary"]/N_)[1]','float')				AS BasicSalary,
+	UpdatedValues.query('.').value('(/U_/F_[@n_ eq "Overtime"]/N_)[1]','float')					AS Overtime,
+	UpdatedValues.query('.').value('(/U_/F_[@n_ eq "BonusCommission"]/N_)[1]','float')			AS BonusCommission,
+	UpdatedValues.query('.').value('(/U_/F_[@n_ eq "ShiftAllowance"]/N_)[1]','float')			AS ShiftAllowance,
+	UpdatedValues.query('.').value('(/U_/F_[@n_ eq "OtherIncome"]/N_)[1]','float')				AS OtherIncome,
 
+	UP.UpdatedValues.query('.') AS SourceXml
+FROM #Updates U
+CROSS APPLY U.UpdatesXml.nodes('/U_') AS UP(UpdatedValues)
 
