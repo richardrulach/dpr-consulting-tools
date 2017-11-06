@@ -31,19 +31,12 @@ SELECT
 	AI.UpdateDate																					AS UpdateDate,
 	AI.StaffMemberId																				AS StaffMemberId,	
 	UP.UpdatedValues.query('.').value('(/C_/@id)[1]','uniqueidentifier')							AS Id,
-	UP.UpdatedValues.query('.').value('(/C_/U_/F_[@n_ eq "ApplicantId"]/N_)[1]','uniqueidentifier')	AS ApplicantId,
-	UP.UpdatedValues.query('.').value('(/C_/U_/F_[@n_ eq "NetMonthlyIncome"]/N_)[1]','float')		AS NetMonthlyIncome,
-	UP.UpdatedValues.query('.').value('(/C_/U_/F_[@n_ eq "BasicSalary"]/N_)[1]','float')			AS BasicSalary,
-	UP.UpdatedValues.query('.').value('(/C_/U_/F_[@n_ eq "Overtime"]/N_)[1]','float')				AS Overtime,
-	UP.UpdatedValues.query('.').value('(/C_/U_/F_[@n_ eq "BonusCommission"]/N_)[1]','float')		AS BonusCommission,
-	UP.UpdatedValues.query('.').value('(/C_/U_/F_[@n_ eq "ShiftAllowance"]/N_)[1]','float')			AS ShiftAllowance,
-	UP.UpdatedValues.query('.').value('(/C_/U_/F_[@n_ eq "OtherIncome"]/N_)[1]','float')			AS OtherIncome,
+	UP.UpdatedValues.query('.').value('(/C_/U_/F_[@n_ eq "StatusNameId"]/N_)[1]','varchar(200)')	AS StatusNameId,
 	UP.UpdatedValues.query('.')																		AS UpdatesXml,
 	AI.SourceXml																					AS SourceXml
 FROM 
 	AI
-	CROSS APPLY AI.SourceXml.nodes('//C_[@t_ eq "FMAApplicantIncome"]') AS UP(UpdatedValues)
+	CROSS APPLY AI.SourceXml.nodes('//C_[@t_ eq "FMAStatus"]') AS UP(UpdatedValues)
 ORDER BY 
-	UP.UpdatedValues.query('.').value('(/C_/@id)[1]','uniqueidentifier'),
-	AI.UpdateDate
+	AI.UpdateDate DESC
 
