@@ -1,7 +1,6 @@
 USE Auditor
 GO
 
-
 SELECT 
 	AI.ref,
 	AI.dt,
